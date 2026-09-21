@@ -1,0 +1,24 @@
+# vpype-gcode プロファイル: K10 ペンプロッタ (Marlin)
+#   ペン下げ Z0 (= ▷ を押したときのペン先位置) / ペン上げ Z7
+#   ▷ を押した位置 = X90 Y0 (紙の右手前の角)。描き終わったらペンを上げてそこへ戻る
+#   ペン下げ後 0.3秒待つ (フローティングのペンが紙に落ち着くまでの余裕)
+#   戻しバネがないので、描き終わってもモーターは無効化しない (M18 するとラックが落ちてペンが紙に付く恐れ)
+[gwrite.k10]
+unit = "mm"
+vertical_flip = true
+document_start = """; K10 plotter
+G21
+G90
+G0 Z7 F300
+"""
+segment_first = """G0 X{x:.3f} Y{y:.3f} F1200
+G1 Z0 F300
+G4 P300
+"""
+segment = """G1 X{x:.3f} Y{y:.3f} F900
+"""
+line_end = """G0 Z7 F300
+"""
+document_end = """G0 Z7 F300
+G0 X90 Y0 F1200
+"""
